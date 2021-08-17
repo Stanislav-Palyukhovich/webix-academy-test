@@ -1,0 +1,71 @@
+<style media="screen">
+    input, button {
+        padding: 7px;
+        height: 40px;
+    }
+    fieldset {
+        margin-bottom: 7px;
+    }
+</style>
+
+<body>
+    <h2>Local Storage Tags - Pure JS</h2>
+    <fieldset>
+        <legend>Insert data</legend>
+        <input id="inpKey" type="text" placeholder="Input key">
+        <input id="inpValue" type="text" placeholder="Input value">
+        <button type="button" id="btnInsert" onclick="insertItem()">Insert Data</button>
+        <button type="button" id="btnClear" onclick="clearData()">Clear Data</button>
+    </fieldset>
+    <fieldset>
+        <legend>Data</legend>
+        <div id="lsOutput"></div>
+    </fieldset>
+</body>
+
+
+
+
+<script type="text/javascript">
+    const inpKey = document.getElementById("inpKey");
+    const inpValue = document.getElementById("inpValue");
+    const lsOutput = document.getElementById("lsOutput");
+
+    getUpdatedList(); // display items after page refresh
+
+    function clearData() {
+        localStorage.clear();
+        getUpdatedList();
+    }
+
+    function insertItem() {
+        const key = inpKey.value;
+        const value = inpValue.value;
+
+
+        if (key&&value){
+            localStorage.setItem(key, value);
+        }
+        console.log(localStorage)
+
+        getUpdatedList();
+        
+    }
+
+    function removeItem(key) {
+        localStorage.removeItem(key.toString());
+        alert (key);
+        getUpdatedList();
+    }
+
+    function getUpdatedList() {
+        lsOutput.innerHTML="";
+        for (let i=0; i<localStorage.length;i++){
+            const key = localStorage.key(i);
+            const value = localStorage.getItem(key);
+
+            lsOutput.innerHTML += `${key}: ${value}<button onclick="removeItem('${key}')">x</button><br />`;
+        }
+    }
+
+</script>
