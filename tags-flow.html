@@ -1,10 +1,13 @@
 <style media="screen">
     input, button {
         padding: 7px;
-        height: 40px;
+        height: 35px;
     }
     fieldset {
         margin-bottom: 7px;
+    }
+    .x{
+        height: 27px;
     }
 </style>
 
@@ -12,10 +15,13 @@
     <h2>Local Storage Tags - Pure JS</h2>
     <fieldset>
         <legend>Insert data</legend>
-        <input id="inpKey" type="text" placeholder="Input key">
         <input id="inpValue" type="text" placeholder="Input value">
-        <button type="button" id="btnInsert" onclick="insertItem()">Insert Data</button>
+        <button type="button" id="btnInsert" onclick="insertItems()">Insert Data</button>
         <button type="button" id="btnClear" onclick="clearData()">Clear Data</button>
+        <div>
+            <input type="checkbox" id="isReadOnly" onclick="_readOnly()">
+            <label for="isReadOnly">Read Only</label>
+        </div>
     </fieldset>
     <fieldset>
         <legend>Data</legend>
@@ -27,45 +33,60 @@
 
 
 <script type="text/javascript">
-    const inpKey = document.getElementById("inpKey");
     const inpValue = document.getElementById("inpValue");
     const lsOutput = document.getElementById("lsOutput");
+    const buttons = document.getElementsByTagName("button");
 
-    getUpdatedList(); // display items after page refresh
+    displayUpdatedList(); // display items after page refresh
 
     function clearData() {
         localStorage.clear();
-        getUpdatedList();
+        displayUpdatedList();
     }
 
-    function insertItem() {
-        const key = inpKey.value;
-        const value = inpValue.value;
+    //it is effective to pull both 1 item and multiple items within one method
+    function insertItems() {
+        const value = inpValue.value.split(" ");
 
-
-        if (key&&value){
-            localStorage.setItem(key, value);
+        for (let i=0; i<value.length;i++){
+            if (value[i]!=""){
+                localStorage.setItem(value[i], value[i]); // key=value  
+            }
         }
+        displayUpdatedList();
+        inpValue.value="";
         console.log(localStorage)
-
-        getUpdatedList();
-        
     }
 
     function removeItem(key) {
         localStorage.removeItem(key.toString());
-        alert (key);
-        getUpdatedList();
+        displayUpdatedList();
     }
 
-    function getUpdatedList() {
+    function displayUpdatedList() {
         lsOutput.innerHTML="";
         for (let i=0; i<localStorage.length;i++){
             const key = localStorage.key(i);
             const value = localStorage.getItem(key);
 
-            lsOutput.innerHTML += `${key}: ${value}<button onclick="removeItem('${key}')">x</button><br />`;
+            lsOutput.innerHTML += `${value}<button class="x" onclick="removeItem('${key}')">x</button><br />`;
         }
     }
+
+
+    function _readOnly(){
+        if (document.getElementById("isReadOnly").checked==true)
+        {
+            for (let i = 0; i < buttons.length; i++) {
+                buttons[i].disabled = true;
+            }
+        }
+        else {
+            for (let i = 0; i < buttons.length; i++) {
+                buttons[i].disabled = false;
+            }
+        }
+    }
+
 
 </script>
